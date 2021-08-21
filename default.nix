@@ -7,8 +7,8 @@ let
   pythonPackages = pkgs.python38Packages;
   frida = pythonPackages.callPackage ./frida {};
 
-  vgpuVersion = "460.32.04";
-  gridVersion = "460.32.03";
+  vgpuVersion = "460.91.03";
+  gridVersion = "460.91.03";
   guestVersion = "461.33";
 
   combinedZipName = "NVIDIA-GRID-Linux-KVM-${vgpuVersion}-${gridVersion}-${guestVersion}.zip";
@@ -29,7 +29,7 @@ let
   nvidia-vgpu-kvm-src = pkgs.runCommand "nvidia-${vgpuVersion}-vgpu-kvm-src" {
     src = requireFile {
       name = "NVIDIA-Linux-x86_64-${vgpuVersion}-vgpu-kvm.run";
-      sha256 = "00ay1f434dbls6p0kaawzc6ziwlp9dnkg114ipg9xx8xi4360zzl";
+      sha256 = "66fe3af8f17bea185e0e0df3932c7cc8ab066c7885f45418b9027c29799b1602";
     };
   } ''
     mkdir $out
@@ -45,10 +45,10 @@ let
     version = "unstable-2021-04-22";
 
     src = pkgs.fetchFromGitHub {
-      owner = "DualCoder";
+      owner = "igormp";
       repo = "vgpu_unlock";
-      rev = "1888236c75d8eac673695be8b000f0b065111c51";
-      sha256 = "0s8bmscb8irj1sggfg1fhacqd1lh59l326bnrk4a2g4qngsbkix3";
+      rev = "b0a3e6e4f7dd2d34d533ebb7506eb5139552809f";
+      sha256 = "1gn6sj5wmis3bbwf6jvq5qg0kj34dh976mq978skji9612rc71qc";
     };
 
     buildInputs = [ (pythonPackages.python.withPackages (p: [ frida ])) ];
@@ -82,7 +82,7 @@ in
 
       src = requireFile {
         name = "NVIDIA-Linux-x86_64-${gridVersion}-grid.run";
-        sha256 = "0smvmxalxv7v12m0hvd5nx16jmcc7018s8kac3ycmxam8l0k9mw9";
+        sha256 = "ac35d434efbae27520e4e6945dcd50f04a6115ab341d050b8122b836899ff474";
       };
 
       patches = patches ++ [
