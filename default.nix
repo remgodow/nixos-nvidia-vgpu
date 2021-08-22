@@ -42,7 +42,7 @@ let
 
   vgpu_unlock = pkgs.stdenv.mkDerivation {
     name = "nvidia-vgpu-unlock";
-    version = "unstable-2021-04-22";
+    version = "unstable-2021-08-22";
 
     src = pkgs.fetchFromGitHub {
       owner = "igormp";
@@ -87,6 +87,7 @@ in
 
       patches = patches ++ [
         ./nvidia-vgpu-merge.patch
+        ./nvidia-vgpu-5.12.patch
       ] ++ lib.optional cfg.unlock.enable
         (pkgs.substituteAll {
           src = ./nvidia-vgpu-unlock.patch;
