@@ -2,9 +2,9 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia/nvidia.Kbuild NV
 --- NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia/nvidia.Kbuild	2021-01-05 22:48:17.000000000 -0800
 +++ NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm-new/kernel/nvidia/nvidia.Kbuild	2021-04-16 19:40:31.380753832 -0700
 @@ -218,3 +218,5 @@
-NV_CONFTEST_GENERIC_COMPILE_TESTS += pm_runtime_available
-NV_CONFTEST_GENERIC_COMPILE_TESTS += vm_fault_t
-NV_CONFTEST_GENERIC_COMPILE_TESTS += pci_class_multimedia_hd_audio
+ NV_CONFTEST_GENERIC_COMPILE_TESTS += pm_runtime_available
+ NV_CONFTEST_GENERIC_COMPILE_TESTS += vm_fault_t
+ NV_CONFTEST_GENERIC_COMPILE_TESTS += pci_class_multimedia_hd_audio
 +
 +ldflags-y += -T @vgpu_unlock@/kern.ld
 diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia/os-interface.c NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm-new/kernel/nvidia/os-interface.c
