@@ -229,6 +229,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
 -
      return status;
  }
+
 @@ -4370,6 +4370,6 @@
  module_init(nv_vgpu_vfio_init);
  module_exit(nv_vgpu_vfio_exit);
@@ -237,7 +238,6 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
 +MODULE_LICENSE("Dual MIT/GPL");
  MODULE_INFO(supported, "external");
  MODULE_VERSION(NV_VERSION_STRING);
-
 diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.h NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm-new/nv-patch/kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.h
 --- NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.h	2021-04-18 18:57:37.000000000 +0530
 +++ NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm-new/kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.h	2021-06-26 17:23:36.177744902 +0530
