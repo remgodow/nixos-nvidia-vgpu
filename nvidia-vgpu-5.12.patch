@@ -9,7 +9,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
  #include "nvstatus.h"
  #include "nv-misc.h"
  #include "nv-linux.h"
-@@ -2666,19 +2667,18 @@
+@@ -2486,19 +2486,18 @@
 
  static int vgpu_save_fd(vgpu_dev_t *vgpu_dev, int fd, NvU32 index)
  {
@@ -36,7 +36,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
 
      return 0;
  }
-@@ -2687,11 +2687,8 @@
+@@ -2507,11 +2507,8 @@
  static irqreturn_t vgpu_msix_handler(int irq, void *arg)
  {
      vgpu_dev_t *vgpu_dev = (vgpu_dev_t *)arg;
@@ -49,7 +49,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
      int i;
      unsigned long eflags;
 
-@@ -2699,21 +2696,16 @@
+@@ -2519,21 +2516,16 @@
      {
          if (vgpu_dev->intr_info.allocated_irq[i] == irq)
          {
@@ -74,7 +74,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
      }
 
      return IRQ_HANDLED;
-@@ -2724,23 +2716,24 @@
+@@ -2544,23 +2536,24 @@
  {
      struct pci_dev *pdev;
      int irq = INVALID_IRQ, ret;
@@ -105,7 +105,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
 
      if (vector < 0 || vector >= vgpu_dev->intr_info.num_ctx)
          return -EINVAL;
-@@ -2756,7 +2749,7 @@
+@@ -2576,7 +2569,7 @@
 
      vgpu_dev->intr_info.allocated_irq[vector] = irq;
 
@@ -114,7 +114,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
 
      return 0;
  }
-@@ -2773,7 +2766,12 @@
+@@ -2593,7 +2586,12 @@
              if (vgpu_dev->intr_info.allocated_irq[i] != INVALID_IRQ)
              {
                  free_irq(vgpu_dev->intr_info.allocated_irq[i], vgpu_dev);
@@ -128,7 +128,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
                  vgpu_dev->intr_info.allocated_irq[i] = INVALID_IRQ;
              }
          }
-@@ -2862,7 +2860,10 @@
+@@ -2682,7 +2680,10 @@
                  {
                      if (flags & VFIO_IRQ_SET_DATA_NONE)
                      {
@@ -140,7 +140,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
                          break;
                      }
 
-@@ -2887,7 +2888,10 @@
+@@ -2707,7 +2708,10 @@
                  {
                      if (flags & VFIO_IRQ_SET_DATA_NONE)
                      {
@@ -152,7 +152,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
                          vgpu_dev->intr_info.index = VFIO_PCI_INTX_IRQ_INDEX;
                          break;
                      }
-@@ -2895,10 +2899,9 @@
+@@ -2715,10 +2719,9 @@
                      if (flags & VFIO_IRQ_SET_DATA_EVENTFD)
                      {
                          int fd = *(int *)data;
@@ -165,7 +165,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
                          }
                      }
                      break;
-@@ -2953,12 +2956,9 @@
+@@ -2773,12 +2776,9 @@
 
  NV_STATUS nv_vgpu_inject_interrupt(void *vgpuRef)
  {
@@ -179,7 +179,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
      vgpu_dev_t *vgpu_dev = vgpuRef;
      unsigned long eflags;
 
-@@ -2967,12 +2967,12 @@
+@@ -2787,12 +2787,12 @@
 
      NV_SPIN_LOCK_IRQSAVE(&vgpu_dev->intr_info_lock, eflags);
 
@@ -194,7 +194,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
      {
          NV_SPIN_UNLOCK_IRQRESTORE(&vgpu_dev->intr_info_lock, eflags);
          return NV_ERR_INVALID_REQUEST;
-@@ -2984,9 +2984,9 @@
+@@ -2804,9 +2804,9 @@
      }
 
      if (vgpu_dev->intr_info.index == VFIO_PCI_MSI_IRQ_INDEX)
@@ -206,7 +206,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
 
      // QEMU has exited. So, safe to ignore interrupts.
      if (vgpu_dev->intr_info.ignore_interrupts == NV_TRUE)
-@@ -2996,19 +2996,14 @@
+@@ -2816,19 +2816,14 @@
      }
      NV_SPIN_UNLOCK_IRQRESTORE(&vgpu_dev->intr_info_lock, eflags);
 
