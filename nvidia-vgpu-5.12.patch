@@ -230,7 +230,7 @@ diff -Naur NVIDIA-Linux-x86_64-460.32.04-vgpu-kvm/kernel/nvidia-vgpu-vfio/nvidia
      return status;
  }
 
-@@ -4370,6 +4370,6 @@
+@@ -4179,6 +4179,6 @@
  module_init(nv_vgpu_vfio_init);
  module_exit(nv_vgpu_vfio_exit);
 
