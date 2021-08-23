@@ -1,0 +1,15 @@
+diff -Naur NVIDIA-Linux-x86_64-460.32.03-grid/kernel/nvidia/nv-vgpu-vmbus.c NVIDIA-Linux-x86_64-460.32.03-grid-new/kernel/nvidia/nv-vgpu-vmbus.c
+--- NVIDIA-Linux-x86_64-460.32.03-grid/kernel/nvidia/nv-vgpu-vmbus.c	2020-12-27 11:31:38.000000000 -0800
++++ NVIDIA-Linux-x86_64-460.32.03-grid-new/kernel/nvidia/nv-vgpu-vmbus.c	2021-04-16 20:45:13.893946912 -0700
+@@ -910,4 +910,4 @@
+ open_msg.downstream_ringbuffer_pageoffset = SEND_RINGBUFFER_SIZE >> PAGE_SHIFT;
+-open_msg.target_vp = nv_hyperv_ctx.guest_channel->target_vp;
++open_msg.target_vp = nv_hyperv_ctx.guest_channel->target_cpu;
+
+ status = nv_hyperv_post_msg(&open_msg, sizeof(struct vmbus_channel_open_channel));
+@@ -1270,4 +1270,4 @@
+ page = pfn_to_page(hypercall_msr.guest_physical_address);
+ num_pages = 1;
+-nv_hyperv_ctx.nv_hypercall_pg = vmap(&page, num_pages, VM_MAP, PAGE_KERNEL_RX);
++nv_hyperv_ctx.nv_hypercall_pg = vmap(&page, num_pages, VM_MAP, PAGE_KERNEL_ROX);
+ if (!nv_hyperv_ctx.nv_hypercall_pg)

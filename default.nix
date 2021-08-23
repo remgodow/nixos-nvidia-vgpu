@@ -88,6 +88,7 @@ in
       patches = patches ++ [
         ./nvidia-vgpu-merge.patch
         ./nvidia-vgpu-5.12.patch
+        ./build-error.patch
       ] ++ lib.optional cfg.unlock.enable
         (pkgs.substituteAll {
           src = ./nvidia-vgpu-unlock.patch;
