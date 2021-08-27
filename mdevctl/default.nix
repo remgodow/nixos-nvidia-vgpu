@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace 60-mdevctl.rules \
-      --replace /usr/sbin/ $out/bin \
+      --replace /usr/sbin/ $out/bin/ \
       --replace /bin/sh ${bash}/bin/sh
   '';
 
