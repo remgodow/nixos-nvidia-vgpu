@@ -4,8 +4,6 @@ let
   cfg = config.hardware.nvidia.vgpu;
 
   mdevctl = pkgs.callPackage ./mdevctl {};
-  pythonPackages = pkgs.python38Packages;
-  frida = pythonPackages.callPackage ./frida {};
 
   vgpuVersion = "460.32.04";
   gridVersion = "460.32.03";
@@ -40,26 +38,25 @@ let
     tail -n +$skip $src | xz -d | tar xvf -
   '';
 
-  vgpu_unlock = pkgs.stdenv.mkDerivation {
-    name = "nvidia-vgpu-unlock";
-    version = "unstable-2021-08-22";
+  vgpu_unlock_rs = pkgs.rustPlatform.buildRustPackage rec {
+    name = "nvidia-vgpu-unlock-rs";
+    version = "unstable-2021-11-07";
 
     src = pkgs.fetchFromGitHub {
-      owner = "igormp";
-      repo = "vgpu_unlock";
-      rev = "b0a3e6e4f7dd2d34d533ebb7506eb5139552809f";
-      sha256 = "1gn6sj5wmis3bbwf6jvq5qg0kj34dh976mq978skji9612rc71qc";
+        owner = "mbilker";
+        repo = "vgpu_unlock-rs";
+        rev = "3ca099921024f441b1db38f3afe3c26d028c4fed";
+        sha256 = "0pfcxy6h35akx8lab3dnzip9w3vh8p6fwafim720v6vvqn9xly8m";
     };
 
-    buildInputs = [ (pythonPackages.python.withPackages (p: [ frida ])) ];
+    cargoSha256 = "a7cb1f8654d39f3104e6ac37c0d4b15399f58297b504daf3a7eeeb81fc8114b8";
+  }
 
-    postPatch = ''
-      substituteInPlace vgpu_unlock \
-        --replace /bin/bash ${pkgs.bash}/bin/bash
-    '';
+  cvgpu = pkgs.fetchUrl {
+    url = "https://gist.githubusercontent.com/HiFiPhile/b3267ce1e93f15642ce3943db6e60776/raw/ab7ad3b2700b25150b1b16e9b3c4aa6d46b69099/cvgpu.c";
+    sha256 = "1aqhgd1qwc1m4cv9p9p32k08pgxlvbmkp1ck3glvz7s0wqmpiz8s";
+  }
 
-    installPhase = "install -Dm755 vgpu_unlock $out/bin/vgpu_unlock";
-  };
 in
 {
   options = {
@@ -89,11 +86,7 @@ in
         ./nvidia-vgpu-merge.patch
         ./nvidia-vgpu-5.12.patch
         ./build-error.patch
-      ] ++ lib.optional cfg.unlock.enable
-        (pkgs.substituteAll {
-          src = ./nvidia-vgpu-unlock.patch;
-          vgpu_unlock = vgpu_unlock.src;
-        });
+#       ];
 
       postUnpack = postUnpack + ''
         # More merging, besides patch above
@@ -144,9 +137,9 @@ in
 
       serviceConfig = {
         Type = "forking";
-        ExecStart = "${lib.optionalString cfg.unlock.enable "${vgpu_unlock}/bin/vgpu_unlock "}${lib.getBin config.hardware.nvidia.package}/bin/nvidia-vgpud";
+        ExecStart = "${lib.getBin config.hardware.nvidia.package}/bin/nvidia-vgpud";
         ExecStopPost = "${pkgs.coreutils}/bin/rm -rf /var/run/nvidia-vgpud";
-        Environment = [ "__RM_NO_VERSION_CHECK=1" ]; # Avoids issue with API version incompatibility when merging host/client drivers
+        Environment = [ "__RM_NO_VERSION_CHECK=1" "${lib.optionalString cfg.unlock.enable "LD_PRELOAD=${vgpu_unlock_rs}/bin/libvgpu_unlock_rs.so"}" ];
       };
     };
 
@@ -158,9 +151,9 @@ in
       serviceConfig = {
         Type = "forking";
         KillMode = "process";
-        ExecStart = "${lib.optionalString cfg.unlock.enable "${vgpu_unlock}/bin/vgpu_unlock "}${lib.getBin config.hardware.nvidia.package}/bin/nvidia-vgpu-mgr";
+        ExecStart = "${lib.getBin config.hardware.nvidia.package}/bin/nvidia-vgpu-mgr";
         ExecStopPost = "${pkgs.coreutils}/bin/rm -rf /var/run/nvidia-vgpu-mgr";
-        Environment = [ "__RM_NO_VERSION_CHECK=1" ];
+        Environment = [ "__RM_NO_VERSION_CHECK=1" "${lib.optionalString cfg.unlock.enable "LD_PRELOAD=${vgpu_unlock_rs}/bin/libvgpu_unlock_rs.so"}" ];
       };
     };
 
