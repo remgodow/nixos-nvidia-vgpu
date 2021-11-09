@@ -50,12 +50,12 @@ let
     };
 
     cargoSha256 = "a7cb1f8654d39f3104e6ac37c0d4b15399f58297b504daf3a7eeeb81fc8114b8";
-  }
+  };
 
   cvgpu = pkgs.fetchUrl {
     url = "https://gist.githubusercontent.com/HiFiPhile/b3267ce1e93f15642ce3943db6e60776/raw/ab7ad3b2700b25150b1b16e9b3c4aa6d46b69099/cvgpu.c";
     sha256 = "1aqhgd1qwc1m4cv9p9p32k08pgxlvbmkp1ck3glvz7s0wqmpiz8s";
-  }
+  };
 
 in
 {
