@@ -86,7 +86,7 @@ in
         ./nvidia-vgpu-merge.patch
         ./nvidia-vgpu-5.12.patch
         ./build-error.patch
-#       ];
+       ];
 
       postUnpack = postUnpack + ''
         # More merging, besides patch above
