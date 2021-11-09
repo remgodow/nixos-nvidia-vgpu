@@ -50,6 +50,7 @@ let
     };
 
     cargoSha256 = "a7cb1f8654d39f3104e6ac37c0d4b15399f58297b504daf3a7eeeb81fc8114b8";
+    cargoPatches = [ ./cargo-lock.patch ];
   };
 
   cvgpu = pkgs.fetchUrl {
